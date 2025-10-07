@@ -1,0 +1,918 @@
+:root {
+  --bg:/* gwarantuje, że elementy z [hidden] są niewidoczne, nawet jeśli gdzieś jest display:flex */
+[hidden] { display: none !important; }
+
+/* Klasa dla ukrywania elementów przed wzrokiem, ale dostępnych dla czytników ekranu */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+* { box-sizing: border-box; }           /* padding/border nie „pompą" szerokości */2236;
+  /* główne tło */
+  --text: #f0f0f0;
+  /* tekst */
+  --primary: #7A9053;
+  --primary-hover: #6a7f47;
+  /* odcień ciemniej */
+  --header-bg: #4A3A60;
+  /* nagłówek */
+  --card-bg: #4A3A60;
+  /* karta */
+  --muted: #7A9053;
+  /* akcent */
+}
+
+/* gwarantuje, że elementy z [hidden] są niewidoczne, nawet jeśli gdzieś jest display:flex */
+[hidden] { display: none !important; }
+
+* { box-sizing: border-box; }           /* padding/border nie „pompą” szerokości */
+
+
+/* --- GLOBALNE DOPIESZCZENIA --- */
+html, body {
+  height: 100%;               /* pełna wysokość okna */
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  caret-color: transparent;   /* ukrywa biały kursor | */
+  display: flex;              /* układ kolumnowy */
+  flex-direction: column;     /* elementy od góry do dołu */
+  font-family: Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  text-align: center;
+  line-height: 1.6;
+
+  /* 🔽 Tapeta binarna */
+  background-image: url("binary.png");
+  background-repeat: repeat;
+  background-size: 260px auto;
+  background-attachment: fixed;
+}
+
+main {
+  flex: 1; /* wypełnia wolne miejsce, spycha stopkę w dół */
+  padding: 30px 20px;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+
+/* Reset drobnych marginesów dla spójności */
+h1,
+h2,
+p {
+  margin: 0 0 12px;
+}
+
+/* Linki – zostaw jeden blok definicji */
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+header {
+  background: linear-gradient(rgba(59, 44, 78, 0.9), rgba(59, 44, 78, 0.9)),
+    /* przyciemnienie */
+    url("skin1.png");
+  /* Twój nowy skin */
+  background-size: cover;
+  /* dopasowanie do szerokości nagłówka */
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #fff;
+  text-align: center;
+  padding: 60px 20px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+}
+
+header h1 {
+  font-size: 2.5em;
+  margin: 0;
+}
+
+header p {
+  margin: 8px 0 0;
+  opacity: 0.9;
+}
+
+main h2 {
+  text-align: center;
+}
+
+/* Sekcje / nagłówki podrzędne */
+section {
+  margin: 24px 0;
+  padding: 8px 0;
+}
+
+h2 {
+  font-size: 1.6em;
+  line-height: 1.2;
+}
+
+/* About – lista dopieszczona */
+#about p {
+  max-width: 800px;
+  margin: 0 auto 12px;
+}
+
+#about {
+  padding: 30px 20px;
+  font-size: 1.2em;
+}
+
+/* Kontakt – komentarz, to tło „karty” */
+#contact {
+  position: relative;
+  background: linear-gradient(rgba(59, 44, 78, 0.9), rgba(59, 44, 78, 0.9)),
+    /* ten sam kolor i efekt co w header */
+    url("binary.png");
+  background-size: 200px auto;
+  background-repeat: repeat;
+  color: var(--text);
+  padding: 30px 20px;
+  margin: 40px auto;
+  max-width: 550px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Przycisk – z użyciem zmiennych */
+.button {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: var(--primary);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.button:hover {
+  background-color: var(--primary-hover);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+/* Stopka – lepszy kontrast + czytelny link */
+footer {
+  background-color: var(--muted);
+  color: #111;
+  /* zamiast white */
+  text-align: center;
+  padding: 20px;
+  font-size: 0.95em;
+}
+
+footer a {
+  color: var(--card-bg);
+  /* ciemniejszy, lepiej widoczny */
+  text-decoration: underline;
+}
+
+/* Responsywność – zostaw jak jest, drobne dopieszczenie fontów */
+@media (max-width: 600px) {
+  header {
+    padding: 32px 16px;
+  }
+
+  header h1 {
+    font-size: 2em;
+  }
+
+  main {
+    padding: 16px 12px;
+  }
+
+  #contact {
+    max-width: 92%;
+    padding: 24px 16px;
+  }
+}
+
+/* ========================= AVATAR: okrąg + ramka + cień (nadpisuje Twoją klasę .avatar) ========================= */
+.avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  /* kształt koła */
+  object-fit: cover;
+  /* ładne kadrowanie */
+  border: 8px solid #3B2C4E;
+  /* ramka spójna z headerem */
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .5);
+  /* cień */
+  outline: 2px solid rgba(122, 144, 83, .35);
+  /* subtelny „glow” w kolorze akcentu */
+  outline-offset: 4px;
+  margin-bottom: 20px;
+}
+
+/* ========================= USŁUGI jako KARTY (Grid) – Bez zmian w HTML: używamy #about ul i #about li ========================= */
+/* Samo UL staje się gridem na 3 kolumny */
+#about ul {
+  list-style: none;
+  margin: 24px auto 0;
+  padding: 0;
+  max-width: 1000px;
+  /* 3 kolumny na większych ekranach */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* Pojedynczy LI wygląda jak karta */
+#about li {
+  background: var(--card-bg);
+  /* tło karty */
+  color: var(--text);
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .35);
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease;
+  position: relative;
+}
+
+/* Usuwamy wypunktowanie „•” sprzed kart */
+#about li::before {
+  display: none;
+  content: "";
+}
+
+/* Hover: lekkie uniesienie + jaśniejsze tło */
+#about li:hover {
+  transform: translateY(-4px);
+  /* delikatne rozjaśnienie – możesz podkręcić jeśli chcesz */
+  background-color: #564575;
+  /* o ton jaśniejsze od #4A3A60 */
+  border-color: rgba(255, 255, 255, .16);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, .45);
+}
+
+/* Responsywność: – poniżej 900px możesz mieć 2 kolumny (opcjonalnie), – poniżej 600px 1 kolumna (telefon). */
+@media (max-width: 900px) {
+  #about ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  #about ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  body {
+    background-attachment: scroll;
+  }
+}
+/* ============== Smooth scroll + offset dla sticky paska ============== */
+html { scroll-behavior: smooth; }          /* płynne przewijanie */
+section { scroll-margin-top: 84px; }       /* odsunięcie kotwic o wysokość paska */
+
+/* ============== STICKY NAVBAR ============== */
+.topnav{
+  position: sticky;          /* przykleja się u góry przy scrollu */
+  top: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 10px 16px;
+  background: rgba(74,58,96,0.92);       /* spójne z headerem */
+  backdrop-filter: blur(6px);              /* delikatne rozmycie */
+  -webkit-backdrop-filter: blur(12px);      /* Safari fix */
+  box-shadow: 0 6px 16px rgba(0,0,0,.45);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+/* logo/brand */
+.topnav .brand{
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+
+/* linki na desktopie */
+.topnav .links{
+  display: flex;
+  gap: 14px;
+}
+.topnav .links a{
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.topnav .links a:hover{ 
+  background: rgba(255,255,255,.08);
+  text-decoration: none;
+}
+
+/* hamburger (ukryty na szerokich) */
+.burger{
+  display: none;
+  background: transparent;
+  border: 0;
+  padding: 8px;
+  cursor: pointer;
+}
+.burger span{
+  display: block;
+  width: 26px; height: 3px;
+  background: #fff;
+  margin: 5px 0;
+  border-radius: 3px;
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+/* ============== MOBILE ============== */
+@media (max-width: 760px){
+  /* pokazujemy burgera */
+  .burger{ display: block; }
+
+  /* chowamy linki w off-canvasie */
+  .topnav .links{
+    position: fixed;
+    inset: 60px 0 auto 0;          /* od góry poniżej paska */
+    background: rgba(74,58,96,0.98);
+    display: grid;
+    gap: 0;
+    transform: translateY(-120%);
+    transition: transform .22s ease;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .topnav .links a{
+    padding: 14px 18px;
+    text-align: left;
+    border-radius: 0;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .topnav .links.open{
+    transform: translateY(0);      /* rozwinięcie menu */
+  }
+
+  /* blokada scrolla, gdy menu otwarte */
+  body.nav-open{ overflow: hidden; }
+
+  /* prosty efekt X na burgerze (opcjonalnie) */
+  .burger[aria-expanded="true"] span:nth-child(1){ transform: translateY(8px) rotate(45deg); }
+  .burger[aria-expanded="true"] span:nth-child(2){ opacity: 0; }
+  .burger[aria-expanded="true"] span:nth-child(3){ transform: translateY(-8px) rotate(-45deg); }
+}
+/* ====== Skórki ====== */
+#skins {
+  background: rgba(74,58,96,0.85);
+  padding: 30px 20px;
+  margin: 40px auto;
+  border-radius: 12px;
+  max-width: 600px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+
+.skin-box {
+  margin-top: 16px;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+}
+
+/* ====== Projekty ====== */
+#projects {
+  padding: 30px 20px;
+  margin: 40px auto;
+  max-width: 800px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+
+/* ====== Panel Skórek (wysuwany) ====== */
+.skins-panel {
+  position: fixed;
+  top: 0; right: -100%;         /* ukryty poza ekranem */
+  width: 320px;
+  height: 100%;
+  background: rgba(74,58,96,0.95);
+  box-shadow: -4px 0 16px rgba(0,0,0,0.6);
+  transition: right 0.3s ease;
+  z-index: 2000;
+  padding: 20px;
+  overflow-y: auto;
+}
+.skins-panel.open { right: 0; } /* wysunięty panel */
+
+.skins-content {
+  color: var(--text);
+}
+.skins-content h2 {
+  margin-top: 0;
+}
+.close-skins {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.4em;
+  cursor: pointer;
+  position: absolute;
+  top: 12px; right: 16px;
+}
+/* ====== Użyteczne dopieszczenia stron wewnętrznych ====== */
+
+/* kontener o stałej szerokości */
+.container{
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* aktywny link w nawigacji */
+.topnav .links a.active,
+.topnav .links a[aria-current="page"]{
+  background: rgba(255,255,255,.12);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+/* hero na stronie projektów – ten sam vibe co header */
+.projects-hero{
+  background:
+    linear-gradient(rgba(59,44,78,0.92), rgba(59,44,78,0.92)),
+    url("skin1.png");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 48px 20px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.6);
+}
+.projects-hero h1{ font-size: 2.2rem; margin: 0 0 6px; }
+.projects-hero p{ opacity: .9; }
+
+/* siatka projektów */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* karta projektu */
+.project-card{
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: left;
+  box-shadow: 0 10px 22px rgba(0,0,0,.35);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
+}
+.project-card:hover{
+  transform: translateY(-4px);
+  background-color: #564575;
+  border-color: rgba(255,255,255,.16);
+  box-shadow: 0 18px 34px rgba(0,0,0,.45);
+}
+.project-card h3{ margin: 0 0 6px; }
+.project-card p{ margin: 0 0 12px; }
+
+/* badge technologii */
+.badges{ display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+.badge{
+  display: inline-block;
+  font-size: .8rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.25);
+  border: 1px solid rgba(255,255,255,.2);
+}
+
+/* ====== Opinie klientów (Testimonials) ====== */
+#testimonials h2{
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.testimonials-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr)); /* 3 kolumny na desktopie */
+  gap: 18px;
+  margin-top: 14px;
+}
+
+/* karta opinii – fioletowa karta jak w reszcie */
+.testimonial-card{
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: left;
+  box-shadow: 0 10px 20px rgba(0,0,0,.35);
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease,
+    background-color .18s ease;
+}
+
+/* hover: lekki podskok + mocniejszy cień */
+.testimonial-card:hover{
+  transform: translateY(-4px);
+  background-color: #564575;                 /* o ton jaśniejsze od var(--card-bg) */
+  border-color: rgba(255,255,255,.16);
+  box-shadow: 0 18px 34px rgba(0,0,0,.45);
+}
+
+/* nagłówek karty: avatar/emoji + imię */
+.t-head{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.t-avatar{
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: rgba(0,0,0,.25);
+  border: 1px solid rgba(255,255,255,.2);
+  font-size: 22px;             /* emoji/ikona */
+  box-shadow: 0 6px 14px rgba(0,0,0,.35);
+}
+.t-name{
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.t-text{
+  margin: 0;
+  opacity: .95;
+  line-height: 1.55;
+}
+
+/* RWD: 1 kolumna na telefonie, 2 na tabletach */
+@media (max-width: 900px){
+  .testimonials-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 600px){
+  .testimonials-grid{ grid-template-columns: 1fr; }
+}
+
+/* miły offset kotwicy pod sticky nav (jeśli linkujesz #testimonials) */
+#testimonials{ scroll-margin-top: 84px; }
+
+/* ====== Formularz kontaktowy ====== */
+.contact-form{
+  margin-top: 14px;
+  display: grid;
+  gap: 14px;
+  text-align: left;                     /* etykiety po lewej */
+}
+
+.form-row{
+  display: grid;
+  gap: 6px;
+}
+
+.contact-form label{
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+.contact-form input,
+.contact-form textarea{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.25);
+  color: var(--text);
+  box-shadow: 0 4px 10px rgba(0,0,0,.25) inset;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder{
+  color: rgba(240,240,240,.65);
+}
+
+/* pole nie „wystaje” poza kartę na focusie */
+.contact-form input:focus,
+.contact-form textarea:focus{
+  outline: none;                        /* wyłączamy outline */
+  border-color: var(--primary);         /* zielona ramka */
+  box-shadow:
+    0 0 0 3px rgba(122,144,83,.35),     /* miękki zielony ring wewnątrz */
+    inset 0 0 0 1px var(--primary);     /* cienka wewnętrzna linia */
+}
+
+
+/* przycisk już masz .button, tu tylko dopieszczamy w layoucie */
+.contact-form .button{
+  justify-self: start;                   /* przycisk wyrównany do lewej */
+}
+
+/* zielony komunikat „wysłano” */
+.alert-success {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: var(--primary);    /* pełny zielony */
+  color: #fff;                   /* biały tekst dla kontrastu */
+  border-radius: 10px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+}
+
+/* ====== Overlay (przyciemnione tło) ====== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+.success-modal {
+  background: var(--card-bg);
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+  max-width: 320px;
+  width: 90%;
+  color: var(--text);
+  font-size: 1.2rem;
+  animation: popIn .3s ease;
+}
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+
+.success-modal button {
+  margin-top: 16px;
+}
+
+/* na małych ekranach nic nie zmieniamy – układ już jest pionowy */
+
+.overlay{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.65);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3000;
+}
+.success-modal{
+  background: var(--card-bg);
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 28px rgba(0,0,0,.6);
+  max-width: 320px; width: 90%;
+  color: var(--text); font-size: 1.2rem;
+  animation: popIn .3s ease;
+}
+@keyframes popIn{ from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+
+/* === FadeInUp dla kart (opinie/projekty itp.) === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* włącz animację na kartach opinii */
+.testimonial-card{
+  opacity: 0;                 /* start */
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* subtelne opóźnienia – 1,2,3… */
+.testimonial-card:nth-child(1){ animation-delay: .0.6s; }
+.testimonial-card:nth-child(2){ animation-delay: 0.16s; }
+.testimonial-card:nth-child(3){ animation-delay: 0.40s; }
+
+/* (opcjonalnie) również dla .project-card */
+.project-card{
+  opacity: 0;
+  animation: fadeInUp .5s ease forwards;
+}
+.project-card:nth-child(1){ animation-delay: .06s; }
+.project-card:nth-child(2){ animation-delay: .12s; }
+.project-card:nth-child(3){ animation-delay: .18s; }
+.project-card:nth-child(4){ animation-delay: .24s; }
+
+/* licznik znaków pod textarea */
+.char-counter{
+  margin-top: 6px;
+  font-size: .9rem;
+  opacity: .85;
+  text-align: right;
+  color: var(--text);
+}
+
+/* ostrzeżenie przy końcówce limitu */
+.char-counter.warn{ color: #ffd78a; }      /* delikatny żółty */
+.char-counter.danger{ color: #ff9b9b; }    /* delikatny czerwony */
+
+/* ===== Mini chat Q&A (namespaced) ===== */
+.miniqa {
+  margin: 2rem auto;
+  max-width: 760px;
+  padding: 0 1rem;
+}
+
+.miniqa-card {
+  background: #4a3b60; /* fiolet pod Twój motyw */
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+  color: #fff;
+  overflow: hidden;
+}
+
+.miniqa-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1rem;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: #3d2f54;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.miniqa-brand {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.miniqa-logo { font-size: 1.4rem; }
+.miniqa-brand h2 { margin: 0; font-size: 1.1rem; font-weight: 700; }
+.miniqa-badge {
+  padding: .15rem .5rem;
+  font-size: .7rem;
+  border-radius: 999px;
+  background: #7d8cff;
+  color: #101020;
+}
+
+.miniqa-user {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .95rem;
+}
+.miniqa-user input{
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 8px;
+  padding: .45rem .6rem;
+  color: #fff;
+  outline: none;
+  width: 180px;
+}
+
+.miniqa-history {
+  height: 360px;
+  overflow: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  background: radial-gradient(1200px 400px at 50% -10%, rgba(255,255,255,.06), transparent) #3f3257;
+}
+
+.miniqa-msg {
+  max-width: 80%;
+  padding: .65rem .8rem;
+  border-radius: 12px;
+  position: relative;
+  line-height: 1.35;
+  word-break: break-word;
+}
+.miniqa-msg time{
+  display: block;
+  font-size: .7rem;
+  opacity: .75;
+  margin-top: .25rem;
+}
+
+/* Użytkownik (prawa strona) */
+.miniqa-msg--user {
+  align-self: flex-end;
+  background: #8ec97f;
+  color: #102010;
+  border-bottom-right-radius: 6px;
+}
+
+/* Bot (lewa strona) */
+.miniqa-msg--bot {
+  align-self: flex-start;
+  background: #2a2140;
+  border: 1px solid rgba(255,255,255,.08);
+  border-bottom-left-radius: 6px;
+}
+
+/* Formularz */
+.miniqa-form {
+  display: flex;
+  gap: .6rem;
+  padding: .9rem;
+  background: #3d2f54;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.miniqa-form input[type="text"]{
+  flex: 1;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+  color: #fff;
+  border-radius: 10px;
+  padding: .6rem .75rem;
+  outline: none;
+}
+.miniqa-btn{
+  background: #88c06d;
+  color: #102010;
+  border: none;
+  border-radius: 10px;
+  padding: .55rem .9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.miniqa-btn:hover{ filter: brightness(1.05); }
+.miniqa-btn:active{ transform: translateY(1px); }
+.miniqa-btn--ghost{
+  background: transparent;
+  color: #e6e6e6;
+  border: 1px solid rgba(255,255,255,.25);
+}
+.miniqa-user input:focus,
+.miniqa-form input[type="text"]:focus {
+  border-color: #88c06d;
+  box-shadow: 0 0 6px #88c06d80;
+  outline: none; /* ukrycie nieładnej domyślnej ramki */
+}
+
+
+.miniqa-hint{
+  margin: 0;
+  padding: .6rem 1rem 1rem;
+  font-size: .85rem;
+  opacity: .85;
+}
+
+/* Sugestie pod polem */
+.miniqa-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding: .5rem 0 0;
+  width: 100%;
+}
+.miniqa-suggestion {
+  background: #2a2140;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 999px;
+  padding: .3rem .8rem;
+  color: #e6e6e6;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.miniqa-suggestion:hover {
+  background: #88c06d;
+  color: #102010;
+  border-color: #88c06d;
+}

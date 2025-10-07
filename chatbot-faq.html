@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot FAQ – Mini chat Q&amp;A</title>
+  <meta name="description" content="Lekki Mini chat Q&A z lokalną bazą pytań i odpowiedzi per użytkownik." />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ===== Mini chat Q&A (namespaced; można przenieść do style.css) ===== */
+    .miniqa-page { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
+    .miniqa-wrap { margin: 2rem auto; max-width: 820px; padding: 0 1rem; width: 100%; }
+    .miniqa-card { background:#4a3b60; border-radius:14px; box-shadow:0 10px 25px rgba(0,0,0,.25); color:#fff; overflow:hidden; }
+    .miniqa-header{ display:flex; flex-wrap:wrap; align-items:center; gap:.75rem 1rem; justify-content:space-between; padding:1rem 1.25rem; background:#3d2f54; border-bottom:1px solid rgba(255,255,255,.08); }
+    .miniqa-brand{ display:flex; align-items:center; gap:.6rem; }
+    .miniqa-logo{ font-size:1.4rem; }
+    .miniqa-brand h2{ margin:0; font-size:1.25rem; font-weight:800; }
+    .miniqa-badge{ padding:.15rem .5rem; font-size:.7rem; border-radius:999px; background:#7d8cff; color:#101020; }
+    .miniqa-user{ display:flex; align-items:center; gap:.5rem; font-size:.95rem; }
+    .miniqa-user input{ background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); border-radius:8px; padding:.45rem .6rem; color:#fff; outline:none; width:200px; }
+    .miniqa-history{ height:420px; overflow:auto; padding:1rem; display:flex; flex-direction:column; gap:.6rem; background:radial-gradient(1200px 400px at 50% -10%, rgba(255,255,255,.06), transparent) #3f3257; }
+    .miniqa-msg{ max-width:80%; padding:.65rem .8rem; border-radius:12px; position:relative; line-height:1.35; word-break: break-word; }
+    .miniqa-msg time{ display:block; font-size:.7rem; opacity:.75; margin-top:.25rem; }
+    .miniqa-msg--user{ align-self:flex-end; background:#8ec97f; color:#102010; border-bottom-right-radius:6px; }
+    .miniqa-msg--bot{ align-self:flex-start; background:#2a2140; border:1px solid rgba(255,255,255,.08); border-bottom-left-radius:6px; }
+    .miniqa-form{ display:flex; gap:.6rem; padding:.9rem; background:#3d2f54; border-top:1px solid rgba(255,255,255,.08); }
+    .miniqa-form input[type="text"]:focus {border-color: #88c06d; box-shadow: 0 0 6px #88c06d80; }   
+    .miniqa-btn{ background:#88c06d; color:#102010; border:none; border-radius:10px; padding:.55rem .9rem; font-weight:700; cursor:pointer; }
+    .miniqa-btn:hover{ filter:brightness(1.05); }
+    .miniqa-btn:active{ transform:translateY(1px); }
+    .miniqa-btn--ghost{ background:transparent; color:#e6e6e6; border:1px solid rgba(255,255,255,.25); }
+    .miniqa-hint{ margin:0; padding:.6rem 1rem 1rem; font-size:.85rem; opacity:.85; }
+    .miniqa-topbar{ display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem; max-width:820px; margin:0 auto; color:#fff; }
+    .miniqa-topbar a.btn-back{ background:#2a2140; border:1px solid rgba(255,255,255,.15); color:#fff; text-decoration:none; padding:.5rem .8rem; border-radius:10px; font-weight:700; }
+  </style>
+</head>
+<body class="miniqa-page">
+  <!-- górny pasek z powrotem -->
+  <div class="miniqa-topbar">
+    <div><strong>Chatbot FAQ – demo</strong></div>
+    <a class="btn-back" href="projekty.html">← Wróć do projektów</a>
+  </div>
+
+  <main class="miniqa-wrap">
+    <!-- Mini chat Q&A – treść demo -->
+    <section id="miniqa" class="miniqa">
+      <div class="miniqa-card">
+        <header class="miniqa-header">
+          <div class="miniqa-brand">
+            <span class="miniqa-logo">💬</span>
+            <h2>Mini chat Q&amp;A</h2>
+            <span class="miniqa-badge">beta</span>
+          </div>
+          <label class="miniqa-user">
+            <span>Użytkownik:</span>
+            <input id="miniqa-userName" type="text" placeholder="np. Dark_Elf" />
+          </label>
+        </header>
+
+        <div id="miniqa-history" class="miniqa-history" aria-live="polite"></div>
+
+<form id="miniqa-form" class="miniqa-form" autocomplete="off">
+  <input id="miniqa-input" type="text" placeholder="Zadaj pytanie… (Enter)" required aria-label="Treść pytania" />
+  <button type="submit" class="miniqa-btn">Wyślij</button>
+  <button type="button" id="miniqa-clear" class="miniqa-btn miniqa-btn--ghost" title="Wyczyść historię">Wyczyść</button>
+  <button type="button" id="miniqa-clear-base" class="miniqa-btn miniqa-btn--ghost" title="Wyczyść bazę Q&amp;A">Wyczyść bazę Q&amp;A</button>
+
+  <!-- SUGESTIE / SKRÓTY -->
+  <div class="miniqa-suggestions">
+    <button type="button" class="miniqa-suggestion">Lista komend</button>
+    <button type="button" class="miniqa-suggestion">Pokaż notatki</button>
+    <button type="button" class="miniqa-suggestion">Usuń notatki</button>
+    <button type="button" class="miniqa-suggestion">Która godzina?</button>
+  </div>
+</form>
+
+
+        <p class="miniqa-hint">
+          Odpowiedzi trzymane są lokalnie w <code>localStorage</code> per <em>userName</em>.
+          Gdy brak odpowiedzi w bazie – podaj ją w okienku i zostanie zapisana.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="miniqa-topbar" style="opacity:.8;">
+    <span>© 2025 by Dark_Elf</span>
+    <a class="btn-back" href="projekty.html">← Wróć do projektów</a>
+  </footer>
+
+  <!-- Logika mini chatu -->
+  <script>
+  (() => {
+    // LIMITY
+    const Q_MAX = 200;  // pytanie
+    const A_MAX = 300;  // odpowiedź
+    const baseKey = (user) => `miniqa_base::${user}`;
+    const histKey = (user) => `miniqa_history::${user}`;
+    const userKey = "miniqa_userName";
+
+    const elUser = document.getElementById("miniqa-userName");
+    const elHistory = document.getElementById("miniqa-history");
+    const elForm = document.getElementById("miniqa-form");
+    const elInput = document.getElementById("miniqa-input");
+    const elClear = document.getElementById("miniqa-clear");
+
+    let userName = localStorage.getItem(userKey) || "Guest";
+    elUser.value = userName;
+    elUser.addEventListener("change", () => {
+      userName = elUser.value.trim() || "Guest";
+      localStorage.setItem(userKey, userName);
+      renderHistory(); // tylko przeładuj historię dla nowego usera
+    });
+
+    function loadBase(){ try { return JSON.parse(localStorage.getItem(baseKey(userName))) || {}; } catch { return {}; } }
+    function saveBase(b){ localStorage.setItem(baseKey(userName), JSON.stringify(b)); }
+    function loadHistory(){ try { return JSON.parse(localStorage.getItem(histKey(userName))) || []; } catch { return []; } }
+    function saveHistory(h){ localStorage.setItem(histKey(userName), JSON.stringify(h)); }
+
+// --- te dwie rzeczy DAJ POZA handlerem, pod funkcjami pomocniczymi ---
+// Powitanie przy pierwszym wejściu
+function addWelcomeMessage() {
+  const history = loadHistory();
+  if (history.length === 0) {
+    history.push({
+      role: "bot",
+      text: "Siemano kolano, elo elo 4.2.0 🚀",
+      ts: Date.now()
+    });
+    // Podpowiedzi na chacie
+    history.push({
+      role: "bot",
+      text:
+        "Możesz zapytać np.:\n" +
+        "– Jak masz na imię?\n" +
+        "– Która godzina?\n" +
+        "– Jak się nazywam?\n" +
+        "– Zapisz notatkę: kupić mleko\n" +
+        "– Pokaż notatki\n" +
+        "– Usuń notatki",
+      ts: Date.now()
+    });
+
+    saveHistory(history);
+  }
+}
+
+// Sugestie (skróty) – wstawiają tekst do inputa
+document.querySelectorAll(".miniqa-suggestion").forEach(btn => {
+  btn.addEventListener("click", () => {
+    elInput.value = btn.textContent;
+    elInput.focus();
+  });
+});
+
+// wywołanie przy starcie
+addWelcomeMessage();  // pokazuje powitanie, jeśli brak historii
+renderHistory();
+    // === BOT & NOTATKI (per user) ===
+const BOT_NAME = "FAQ-Bot 4.2.0";
+
+// Notatki trzymamy pod osobnym kluczem
+const notesKey = (user) => `miniqa_notes::${user}`;
+function loadNotes() {
+  try { return JSON.parse(localStorage.getItem(notesKey(userName))) || []; }
+  catch { return []; }
+}
+function saveNotes(arr) {
+  localStorage.setItem(notesKey(userName), JSON.stringify(arr));
+}
+
+    function msg(role, text, ts){
+      const d=document.createElement("div");
+      d.className = "miniqa-msg miniqa-msg--" + role;
+      d.innerHTML = "<div>" + escapeHtml(text) + "</div><time>" + new Date(ts).toLocaleString() + "</time>";
+      return d;
+    }
+    function escapeHtml(s){ return s.replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+    function renderHistory(){
+      elHistory.innerHTML = "";
+      loadHistory().forEach(m => elHistory.appendChild(msg(m.role, m.text, m.ts)));
+      elHistory.scrollTop = elHistory.scrollHeight;
+    }
+
+    const norm = s =>
+  s
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .replace(/[\s?!.,;:…„”"'\-—_]+$/g, "")
+    .trim();
+
+    // Baza Q&A (per user) – szukanie i zapisywanie odpowiedzi
+function findAnswer(q) {
+  const base = loadBase();
+  return base[norm(q)] || null;
+}
+function setAnswer(q, a) {
+  const base = loadBase();
+  base[norm(q)] = a;
+  saveBase(base);
+}
+ 
+// === INTENTY: wbudowane odpowiedzi ===
+// Zwraca string z odpowiedzią albo null, gdy brak dopasowania
+function intentAnswer(rawQuestion) {
+  const q = norm(rawQuestion);
+
+  // "lista komend" / "pomoc" / "help"
+if (/(lista.*komend|pomoc|help)/.test(q)) {
+  return (
+    "Przykładowe komendy:\n" +
+    "– Jak masz na imię?\n" +
+    "– Która godzina?\n" +
+    "– Jak się nazywam?\n" +
+    "– Zapisz notatkę: kupić mleko\n" +
+    "– Pokaż notatki\n" +
+    "– Usuń notatki"
+  );
+}
+
+
+  // 1) "jak masz na imię" / "kim jesteś"
+  if (/(jak.*imi[eę]|kim.*jeste[sś])/.test(q)) {
+    return `Jestem ${BOT_NAME}. Ty jesteś użytkownikiem: ${userName}.`;
+  }
+
+  // 2) "która godzina" / "jaka jest data"
+  if (/(kt[oó]ra.*godzina|jaka.*data|jaki.*dzie[nń])/.test(q)) {
+    const now = new Date();
+    return `Teraz jest ${now.toLocaleString()}.`;
+  }
+
+  // 3) "jak się nazywam" / "jaki mam nick/użytkownik"
+  if (/(jak.*nazywam|jaki.*(nick|u[zż]ytkownik))/.test(q)) {
+    return `Masz ustawioną nazwę użytkownika: ${userName}.`;
+  }
+
+  // 4) Notatki:
+  //    "zapisz notatkę: ..." (również bez polskich znaków)
+  const mSave = q.match(/zapisz\s+notatk[eę]\s*[:\-]?\s*(.+)$/);
+  if (mSave && mSave[1]) {
+    const text = mSave[1].trim();
+    if (!text) return "Nie mogę zapisać pustej notatki.";
+    const arr = loadNotes();
+    arr.push({ text, ts: Date.now() });
+    saveNotes(arr);
+    return `Zapisano notatkę (#${arr.length}): "${text}".`;
+  }
+
+  //    "pokaż notatki" / "wyświetl notatki"
+  if (/(poka[zż]|wy[sś]wietl)\s+notatki/.test(q)) {
+    const arr = loadNotes();
+    if (arr.length === 0) return "Nie masz jeszcze żadnych notatek.";
+    const lines = arr
+      .slice(-10) // ostatnie 10 dla czytelności
+      .map((n, i) => `• ${n.text} (${new Date(n.ts).toLocaleString()})`);
+    return `Twoje notatki (ostatnie ${lines.length}):\n` + lines.join("\n");
+  }
+
+  //    "usuń notatki" / "wyczyść notatki"
+  if (/((usu[nń])|(wyczy[sś][cć]))\s+notatki/.test(q)) {
+    if (confirm("Usunąć wszystkie notatki dla użytkownika \"" + userName + "\"?")) {
+      saveNotes([]);
+      return "Wyczyszczono wszystkie notatki.";
+    } else {
+      return "Anulowano czyszczenie notatek.";
+    }
+  }
+
+  return null; // brak dopasowania → leci do bazy Q&A
+}
+
+
+elForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = elInput.value.trim();
+  if (!text) return;
+
+  // Walidacja pytania
+  if (text.length > Q_MAX) {
+    const histTooLong = loadHistory();
+    histTooLong.push({
+      role: "bot",
+      text: `Pytanie jest za długie (max ${Q_MAX} znaków). Skróć je proszę.`,
+      ts: Date.now()
+    });
+    saveHistory(histTooLong);
+    elInput.value = "";
+    renderHistory();
+    return;
+  }
+
+  const history = loadHistory();
+  history.push({ role: "user", text, ts: Date.now() });
+
+  // Najpierw spróbuj odpowiedzi wbudowanej (intenty)
+let answer = intentAnswer(text);
+
+// Jeśli brak wbudowanej → sprawdź bazę Q&A
+if (answer === null) {
+  answer = findAnswer(text);
+}
+
+
+  if (!answer) {
+    const provided = window.prompt(`Brak odpowiedzi w bazie.\nPodaj odpowiedź (max ${A_MAX} znaków):`);
+
+    if (provided === null) {
+      history.push({ role: "bot", text: "Anulowano dodanie odpowiedzi.", ts: Date.now() });
+      saveHistory(history);
+      elInput.value = "";
+      renderHistory();
+      return;
+    }
+
+    const cleaned = provided.trim();
+
+    if (!cleaned) {
+      history.push({ role: "bot", text: "Odpowiedź nie może być pusta — nic nie zapisano.", ts: Date.now() });
+      saveHistory(history);
+      elInput.value = "";
+      renderHistory();
+      return;
+    }
+
+    if (cleaned.length > A_MAX) {
+      history.push({ role: "bot", text: `Odpowiedź jest za długa (max ${A_MAX} znaków) — nic nie zapisano.`, ts: Date.now() });
+      saveHistory(history);
+      elInput.value = "";
+      renderHistory();
+      return;
+    }
+
+    answer = cleaned;
+    setAnswer(text, answer);
+  }
+
+  history.push({ role: "bot", text: answer, ts: Date.now() });
+  saveHistory(history);
+
+  elInput.value = "";
+  renderHistory();
+});
+
+
+    elClear.addEventListener("click", () => {
+      if(confirm('Wyczyścić historię rozmowy dla użytkownika "' + userName + '"?')){
+        saveHistory([]); renderHistory();
+      }
+    });
+    const elClearBase = document.getElementById("miniqa-clear-base");
+if (elClearBase) {
+  elClearBase.addEventListener("click", () => {
+    if (confirm(`Wyczyścić bazę Q&A dla użytkownika "${userName}"?`)) {
+      saveBase({});
+      alert("Baza Q&A wyczyszczona dla użytkownika: " + userName);
+    }
+  });
+}
+
+  })();
+
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Snake — Dark_Elf Edition</title>
+  
+  <meta name="description" content="Snake — Dark_Elf Edition. Klasyczna gra JS z pauzą, poziomami i dźwiękiem. Zagraj w przeglądarce.">
+  <link rel="canonical" href="https://example.com/snake/">
+  <meta property="og:title" content="Snake — Dark_Elf Edition">
+  <meta property="og:description" content="Klasyczna gra JS z pauzą, poziomami i dźwiękiem.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.com/snake/">
+  <meta property="og:image" content="https://example.com/assets/snake-thumb.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#5b4bff">
+
+  <!-- 1) globalny styl wizytówki, 2) lokalny styl gry -->
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="topnav" aria-label="Główna nawigacja">
+    <a href="../index.html" class="brand">Dark_Elf</a>
+    <div class="links">
+      <a href="../projekty.html" aria-current="page">Projekty</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a href="../projekty.html" class="button" style="margin-top:16px">← Wróć do projektów</a>
+
+    <div class="toolbar" style="display:flex; gap:8px; margin:12px 0;">
+      <button class="button" onclick="window.pauseGame && window.pauseGame()">⏸ Pauza</button>
+      <button class="button button--ghost" onclick="window.toggleMute && window.toggleMute()">🔊 Dźwięk</button>
+    </div>
+
+    <!-- TU dodajemy kartę w stylu wizytówki -->
+    <section class="project-card game-area">
+      <p class="sr-only" id="snake-desc">
+        Gra Snake: poruszaj się strzałkami. ESC — pauza, M — dźwięk. Zbieraj jabłka, unikaj zderzeń.
+      </p>
+      <div id="hud" style="align-self:flex-end; margin-bottom:8px; opacity:.9">
+        <span id="hud-level" class="badge">Poziom 1</span>
+        <span id="hud-score" class="badge">Wynik 0</span>
+      </div>
+      <canvas id="gameCanvas" aria-describedby="snake-desc" role="img" width="800" height="750"></canvas>
+    </section>
+  </main>
+
+  <script src="snake.js"></script>
+</body>
+</html>
